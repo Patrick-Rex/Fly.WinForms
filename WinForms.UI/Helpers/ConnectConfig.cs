@@ -9,7 +9,7 @@ namespace Fly.WinForms.Core.config
     /// </summary>
     public class ConnectConfig
     {
-        private readonly string _filePath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "Config\\ConnectSetting.ini");
+        private readonly string _filePath = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.SetupInformation.ApplicationBase).Parent.FullName, "Config\\connectSetting.ini");
         private readonly IniFile _iniFile;
         public ConnectConfig()
         {

@@ -1,25 +1,25 @@
 ﻿using Autofac;
+using Framework.Common.Utils;
 using ReactiveUI;
+using Serilog;
 using Splat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinForms.UI.ViewModel;
-using WinForms.UI.Views;
 
 namespace WinForms.UI
 {
 
     public class Bootstrapper
     {
-        private IContainer _container;
+        private readonly string configFilePath = "Config\\serilog.json";
 
+
+        private IContainer _container;
+        
         public Bootstrapper()
         {
+            ConfigureLogging();
             ConfigureServices();
             ConfigureInteractions();
         }
@@ -35,11 +35,19 @@ namespace WinForms.UI
             //启动界面
             using (var scope = _container.BeginLifetimeScope())
             {
-                var screen =scope.Resolve<IScreen>(); ;
+                var screen =scope.Resolve<IScreen>();
                 var view = ViewLocator.Current.ResolveView(screen);
                 view.ViewModel = screen;
                 Application.Run((Form)view);
             }
+        }
+        /// <summary>
+        /// 配置日志记录
+        /// </summary>
+        private void ConfigureLogging()
+        {
+            LogUtils.ConfigureLogging(configFilePath);
+
         }
 
         /// <summary>
@@ -48,6 +56,9 @@ namespace WinForms.UI
         private void ConfigureServices()
         {
             var builder = new ContainerBuilder();
+
+            builder.RegisterInstance(Log.Logger).As<Serilog.ILogger>().SingleInstance();
+
             builder.RegisterType<ShellViewModel>().As<IScreen>().SingleInstance();
 
 

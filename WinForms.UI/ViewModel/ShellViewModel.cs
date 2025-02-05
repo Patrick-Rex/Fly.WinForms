@@ -1,18 +1,14 @@
 ﻿using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Serilog;
 
 namespace WinForms.UI.ViewModel
 {
-    public class ShellViewModel : ReactiveObject, IScreen
+    public class ShellViewModel : BaseViewModel, IScreen
     {
         public RoutingState Router { get; }
 
 
-        public ShellViewModel()
+        public ShellViewModel(ILogger logger) : base(logger)
         {
             Router = new RoutingState();
         }
